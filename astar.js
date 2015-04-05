@@ -35,19 +35,18 @@ AStar.Tile = function(x, y, blocked) {
  */
 AStar.Tile.prototype.reset = function() {
 	
-	// Cost from start tile
-	this.gCost = 0;
+  // Cost from start tile
+  this.gCost = 0;
 
-	// Estimated cost to goal tile based on heuristic function
-	this.hCost = 0;
+  // Estimated cost to goal tile based on heuristic function
+  this.hCost = 0;
 
-	// fCost = gCost + hCost - lowest fCost tiles are examined first by algorithm
-	this.fCost = 0;
+  // fCost = gCost + hCost - lowest fCost tiles are examined first by algorithm
+  this.fCost = 0;
 
-	this.visited = false;
-	this.closed = false;
-	this.parent = null;	
-
+  this.visited = false;
+  this.closed = false;
+  this.parent = null;	
 };
 
 /**
@@ -57,7 +56,7 @@ AStar.Tile.prototype.reset = function() {
  */
 AStar.Tile.prototype.samePositionAs = function(tile) {
 
-	return (this.x === tile.x && this.y === tile.y);
+  return (this.x === tile.x && this.y === tile.y);
 };
 
 /**
@@ -71,26 +70,26 @@ AStar.Tile.prototype.samePositionAs = function(tile) {
  */
 AStar.TileMap = function(width, height, tileWidth, tileHeight) {
 
-	this.width = width;
-	this.height = height;	
-	this.tileWidth = tileWidth;
-	this.tileHeight = tileHeight;
-	this.tiles = [];
-	var innerData;
+  this.width = width;
+  this.height = height;	
+  this.tileWidth = tileWidth;
+  this.tileHeight = tileHeight;
+  this.tiles = [];
+  var innerData;
 
-	for (var i = 0; i < this.height; i++) {
-		innerData = [];
+  for (var i = 0; i < this.height; i++) {
+    innerData = [];
 
-		for (var j = 0; j < this.width; j++) {
-			if (Math.random() > 0.75) {
-			 	innerData.push(new AStar.Tile(i, j, true));
-			} else {
-				innerData.push(new AStar.Tile(i, j, false));
-			}
-		}
+    for (var j = 0; j < this.width; j++) {
+      if (Math.random() > 0.75) {
+        innerData.push(new AStar.Tile(i, j, true));
+      } else {
+        innerData.push(new AStar.Tile(i, j, false));
+      } 
+    }
 
-		this.tiles.push(innerData);
-	}
+    this.tiles.push(innerData);
+  }
 };
 
 /**
@@ -100,11 +99,11 @@ AStar.TileMap = function(width, height, tileWidth, tileHeight) {
  */
 AStar.TileMap.prototype.reset = function() {
 
-	for (var i = 0; i < this.width; i++) {
-		for (var j = 0; j < this.height; j++) {
-			this.tiles[i][j].reset();
-		}
-	}
+  for (var i = 0; i < this.width; i++) {
+    for (var j = 0; j < this.height; j++) {
+      this.tiles[i][j].reset();
+    }
+  }
 };
 
 /**
@@ -116,30 +115,29 @@ AStar.TileMap.prototype.reset = function() {
  */
 AStar.TileMap.prototype.getNeighbors = function(x, y) {
 
-	var neighbors = [];
+  var neighbors = [];
 
-	// West
-	if (this.tiles[x - 1] && this.tiles[x - 1][y] && !this.tiles[x - 1][y].blocked) {
-		neighbors.push(this.tiles[x -1][y]);
-	}
+  // West
+  if (this.tiles[x - 1] && this.tiles[x - 1][y] && !this.tiles[x - 1][y].blocked) {
+    neighbors.push(this.tiles[x -1][y]);
+  }
 
-	// East
+  // East
   if (this.tiles[x + 1] && this.tiles[x + 1][y] && !this.tiles[x + 1][y].blocked) {
-      neighbors.push(this.tiles[x + 1][y]);
+    neighbors.push(this.tiles[x + 1][y]);
   }
 
   // South
   if (this.tiles[x] && this.tiles[x][y - 1] && !this.tiles[x][y - 1].blocked) {
-      neighbors.push(this.tiles[x][y - 1]);
+    neighbors.push(this.tiles[x][y - 1]);
   }
 
   // North
   if (this.tiles[x] && this.tiles[x][y + 1] && !this.tiles[x][y + 1].blocked) {
-      neighbors.push(this.tiles[x][y + 1]);
+    neighbors.push(this.tiles[x][y + 1]);
   }
 
   return neighbors;
-
 };
 
 /**
@@ -153,74 +151,74 @@ AStar.TileMap.prototype.getNeighbors = function(x, y) {
  */
 AStar.findPath = function(tileMap, startTile, goalTile) {
 
-	var path = [];
-	var openList = [];
+  var path = [];
+  var openList = [];
 
-	tileMap.reset();
+  tileMap.reset();
 
-	openList.push(startTile);
+  openList.push(startTile);
 
-	while (openList.length > 0) {
+  while (openList.length > 0) {
 
-		// Find the open node with the lowest fCost
-		var lowIndex = 0;
-		for (var i = 0; i < openList.length; i++) {
+    // Find the open node with the lowest fCost
+    var lowIndex = 0;
+    for (var i = 0; i < openList.length; i++) {
 
-			if (openList[i].fCost < openList[lowIndex].fCost) {
-				lowIndex = i;
-			}
-		}
+      if (openList[i].fCost < openList[lowIndex].fCost) {
+        lowIndex = i;
+      }
+    }
 
-		var currentTile = openList.splice(lowIndex, 1)[0];
+    var currentTile = openList.splice(lowIndex, 1)[0];
 
-		// End case: found goal tile
-		if (currentTile.samePositionAs(goalTile)) {
-			var current = currentTile;
-			while (current.parent) {
-				path.push(current);
-				current = current.parent;			
-			}
+    // End case: found goal tile
+    if (currentTile.samePositionAs(goalTile)) {
+      var current = currentTile;
+      while (current.parent) {
+        path.push(current);
+        current = current.parent;			
+      }
 
-			// Returning path array needs to be in order: startTile to goalTile
-			path.push(startTile);			
-			return path.reverse();
-		}
+      // Returning path array needs to be in order: startTile to goalTile
+      path.push(startTile);			
+      return path.reverse();
+    }
 
-		currentTile.closed = true;
+    currentTile.closed = true;
 
-		// Normal case: expand to neighboring tiles
-		var neighbors = tileMap.getNeighbors(currentTile.x, currentTile.y);
+    // Normal case: expand to neighboring tiles
+    var neighbors = tileMap.getNeighbors(currentTile.x, currentTile.y);
 
-		for (var j = 0; j < neighbors.length; j++) {
-			var neighbor = neighbors[j];
+    for (var j = 0; j < neighbors.length; j++) {
+      var neighbor = neighbors[j];
 
-			if (neighbor.closed || neighbor.blocked) {
-				continue;
-			}
+      if (neighbor.closed || neighbor.blocked) {
+        continue;
+      }
 
-			var gCost = currentTile.gCost + neighbor.weight;
+      var gCost = currentTile.gCost + neighbor.weight;
 
-			/** 
-			 * If the current path to this neighbor tile is lower than what we've seen so far, 
-			 * then we should adjust the this neighbor tile to use the current path by updating
-			 * its parent and gCost
-			 */
-			if (!neighbor.visited || gCost < neighbor.gCost) {
+      /** 
+       * If the current path to this neighbor tile is lower than what we've seen so far, 
+       * then we should adjust the this neighbor tile to use the current path by updating
+       * its parent and gCost
+       */
+      if (!neighbor.visited || gCost < neighbor.gCost) {
 
-				if (!neighbor.visited) {
-					openList.push(neighbor);
-				}
+        if (!neighbor.visited) {
+          openList.push(neighbor);
+        }
 
-				neighbor.visited = true;
-				neighbor.parent = currentTile;
-				neighbor.hCost = this.heuristic(neighbor, goalTile);
-				neighbor.gCost = gCost;
-				neighbor.fCost = neighbor.gCost + neighbor.hCost;					
-			}
-		}	
-	}
+        neighbor.visited = true;
+        neighbor.parent = currentTile;
+        neighbor.hCost = this.heuristic(neighbor, goalTile);
+        neighbor.gCost = gCost;
+        neighbor.fCost = neighbor.gCost + neighbor.hCost;					
+      }
+    }	
+  }
 
-	return path;
+  return path;
 };
 
 /**
@@ -232,8 +230,8 @@ AStar.findPath = function(tileMap, startTile, goalTile) {
  */
 AStar.heuristic = function(startTile, goalTile) {
 
-	// Manhattan Distance
-	return Math.abs(goalTile.x - startTile.x) + Math.abs(goalTile.y - startTile.y);
+  // Manhattan Distance
+  return Math.abs(goalTile.x - startTile.x) + Math.abs(goalTile.y - startTile.y);
 };
 
 /**
@@ -248,11 +246,11 @@ AStar.heuristic = function(startTile, goalTile) {
  */
 AStar.Demo = function(canvas, mapWidth, mapHeight, tileWidth, tileHeight) {
 
-	this.canvas = canvas;
-	this.context = this.canvas.getContext('2d');
-	this.canvas.width = mapWidth * tileWidth;
-	this.canvas.height = mapHeight * tileHeight;
-	this.tileMap = new AStar.TileMap(mapWidth, mapHeight, tileWidth, tileHeight);	
+  this.canvas = canvas;
+  this.context = this.canvas.getContext('2d');
+  this.canvas.width = mapWidth * tileWidth;
+  this.canvas.height = mapHeight * tileHeight;
+  this.tileMap = new AStar.TileMap(mapWidth, mapHeight, tileWidth, tileHeight);	
 };
 
 /**
@@ -265,17 +263,15 @@ AStar.Demo = function(canvas, mapWidth, mapHeight, tileWidth, tileHeight) {
  */
 AStar.Demo.prototype.onCanvasClick = function(e) {
 
-	var x;
+  var x;
   var y;
   
   if (e.pageX != undefined && e.pageY != undefined) {
     x = e.pageX;
     y = e.pageY;
   } else {
-    x = e.clientX + document.body.scrollLeft +
-      document.documentElement.scrollLeft;
-    y = e.clientY + document.body.scrollTop +
-      document.documentElement.scrollTop;
+    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
   }
   
   // make them relative to the canvas only
@@ -285,14 +281,13 @@ AStar.Demo.prototype.onCanvasClick = function(e) {
   var tileClicked = this.tileMap.tiles[Math.floor(x / this.tileMap.tileWidth)][Math.floor(y / this.tileMap.tileHeight)];  
 
   if (!tileClicked.blocked) {
-	  var path = AStar.findPath(this.tileMap, this.startTile, tileClicked);
+    var path = AStar.findPath(this.tileMap, this.startTile, tileClicked);
 
-	  this.renderTileMap();
-	  this.renderPath(path);
+    this.renderTileMap();
+    this.renderPath(path);
 
-	  this.startTile = tileClicked;
+    this.startTile = tileClicked;
   }
-
 };
 
 /** 
@@ -302,16 +297,15 @@ AStar.Demo.prototype.onCanvasClick = function(e) {
  */
 AStar.Demo.prototype.load = function() {
 	
-	// Make 0,0 the default starting tile
-	this.tileMap.tiles[0][0].blocked = false;
-	this.startTile = this.tileMap.tiles[0][0];
+  // Make 0,0 the default starting tile
+  this.tileMap.tiles[0][0].blocked = false;
+  this.startTile = this.tileMap.tiles[0][0];
 
-	this.renderTileMap();	
-	this.renderPath([this.startTile]);
+  this.renderTileMap();	
+  this.renderPath([this.startTile]);
 
-	// Need to use bind here so 'this' will reference the Demo instead of the canvas
-	this.canvas.addEventListener('click', this.onCanvasClick.bind(this), false);
-
+  // Need to use bind here so 'this' will reference the Demo instead of the canvas
+  this.canvas.addEventListener('click', this.onCanvasClick.bind(this), false);
 };
 
 /**
@@ -321,48 +315,47 @@ AStar.Demo.prototype.load = function() {
  */
 AStar.Demo.prototype.renderTileMap = function() {
 
-	this.context.clearRect (0 , 0 , this.canvas.width, this.canvas.height);
-	this.context.strokeStyle = 'black';
+  this.context.clearRect (0 , 0 , this.canvas.width, this.canvas.height);
+  this.context.strokeStyle = 'black';
 
-	for (var i = 0; i < this.tileMap.width; i++) {
-		for (var j = 0; j < this.tileMap.height; j++) {
+  for (var i = 0; i < this.tileMap.width; i++) {
+    for (var j = 0; j < this.tileMap.height; j++) {
 		
-			if (this.tileMap.tiles[i][j].blocked) {	
+      if (this.tileMap.tiles[i][j].blocked) {	
 
-				// Blocked tiles are black
-				this.context.fillStyle = 'black';
-				this.context.fillRect(i * this.tileMap.tileWidth, 
-															j * this.tileMap.tileHeight, 
-															this.tileMap.tileWidth, 
-															this.tileMap.tileHeight);
+        // Blocked tiles are black
+        this.context.fillStyle = 'black';
+        this.context.fillRect(i * this.tileMap.tileWidth, 
+          j * this.tileMap.tileHeight, 
+          this.tileMap.tileWidth, 
+          this.tileMap.tileHeight);
 
 			} else if (this.tileMap.tiles[i][j].closed) {			
 
-				// Closed tiles are orange
-				this.context.fillStyle = 'orange';
-				this.context.fillRect(i * this.tileMap.tileWidth, 
-															j * this.tileMap.tileHeight, 
-															this.tileMap.tileWidth, 
-															this.tileMap.tileHeight);
+        // Closed tiles are orange
+        this.context.fillStyle = 'orange';
+        this.context.fillRect(i * this.tileMap.tileWidth, 
+          j * this.tileMap.tileHeight, 
+          this.tileMap.tileWidth, 
+          this.tileMap.tileHeight);
 
-			} else if (this.tileMap.tiles[i][j].visited) {			
+      } else if (this.tileMap.tiles[i][j].visited) {			
 
-				// Visited tiles are grey
-				this.context.fillStyle = 'grey';
-				this.context.fillRect(i * this.tileMap.tileWidth, 
-															j * this.tileMap.tileHeight, 
-															this.tileMap.tileWidth, 
-															this.tileMap.tileHeight);
-			} 
+        // Visited tiles are grey
+        this.context.fillStyle = 'grey';
+        this.context.fillRect(i * this.tileMap.tileWidth, 
+          j * this.tileMap.tileHeight, 
+          this.tileMap.tileWidth, 
+          this.tileMap.tileHeight);
+      } 
 
-			// Draw border for all tiles
-			this.context.strokeRect(i * this.tileMap.tileWidth, 
-															j * this.tileMap.tileHeight, 
-															this.tileMap.tileWidth, 
-															this.tileMap.tileHeight);			
-		}
-	}	
-
+      // Draw border for all tiles
+      this.context.strokeRect(i * this.tileMap.tileWidth, 
+        j * this.tileMap.tileHeight, 
+        this.tileMap.tileWidth, 
+        this.tileMap.tileHeight);			
+    }
+  }	
 };
 
 /**
@@ -372,29 +365,28 @@ AStar.Demo.prototype.renderTileMap = function() {
  * @param {AStar.Tile[]} path
  */
 AStar.Demo.prototype.renderPath = function(path) {
+  
+  this.context.strokeStyle = 'black';
+  for (var i = 0; i < path.length; i++) {
 
-	this.context.strokeStyle = 'black';
-	for (var i = 0; i < path.length; i++) {
+    this.context.fillStyle = 'red';
 
-		this.context.fillStyle = 'red';
+    if (i == 0) {
+      // Start tile is yellow
+      this.context.fillStyle = 'yellow';
+    } else if (i == path.length - 1) {
+      // Goal tile is green
+      this.context.fillStyle = 'green';
+    }
 
-		if (i == 0) {
-			// Start tile is yellow
-			this.context.fillStyle = 'yellow';
+    this.context.fillRect(path[i].x * this.tileMap.tileWidth,
+      path[i].y * this.tileMap.tileHeight,
+      this.tileMap.tileWidth,
+      this.tileMap.tileHeight);
 
-		} else if (i == path.length - 1) {
-			// Goal tile is green
-			this.context.fillStyle = 'green';
-		}
-
-		this.context.fillRect(path[i].x * this.tileMap.tileWidth,
-													path[i].y * this.tileMap.tileHeight,
-													this.tileMap.tileWidth,
-													this.tileMap.tileHeight);
-
-		this.context.strokeRect(path[i].x * this.tileMap.tileWidth,
-													path[i].y * this.tileMap.tileHeight,
-													this.tileMap.tileWidth,
-													this.tileMap.tileHeight);
-	}
+    this.context.strokeRect(path[i].x * this.tileMap.tileWidth,
+      path[i].y * this.tileMap.tileHeight,
+      this.tileMap.tileWidth,
+      this.tileMap.tileHeight);
+  }
 };
