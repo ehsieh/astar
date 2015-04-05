@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>A * Pathfinding Demo</title>
+	</head>
+	<body>
+		<div><p>Default start tile is (0,0).  Click on an open tile to set a new goal tile and execute the algorithm.  The last goal tile will the become the start tile of the next execution.</p></div>
+		
+		<div>
+			<ul>
+				<li>Yellow: Start Tile</li>
+				<li>Green: Goal Tile</li>
+				<li>Red: Path Tile</li>
+				<li>Orange: Examined Tile</li>
+				<li>Grey: Visited Tile</li>
+			</ul>
+		</div>
+		<div>
+			<canvas id="canvas" />
+			<script type="text/javascript" src="astar.js"></script>
+			<script>
+
+				window.onload = function() {
+
+					var canvas = document.getElementById('canvas');
+					var demo = new AStar.Demo(canvas, 40, 40, 20, 20);
+					demo.load();
+
+				};
+
+			</script>
+		</div>		
+	</body>
+</html>
