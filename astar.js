@@ -19,14 +19,13 @@ var AStar = AStar || {};
  */
 AStar.Tile = function(x, y, blocked) {
 
-	this.x = x;
-	this.y = y;	
-	this.blocked = blocked;
+  this.x = x;
+  this.y = y;	
+  this.blocked = blocked;
 
-	// Varying tile weights can be used to simulate different terrain types
-	this.weight = 1;
-	this.reset();
-
+  // Varying tile weights can be used to simulate different terrain types
+  this.weight = 1;
+  this.reset();
 };
 
 /**
