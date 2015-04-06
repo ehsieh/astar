@@ -165,8 +165,9 @@ AStar.findPath = function(tileMap, startTile, goalTile) {
     /** 
      * Find the open node with the lowest fCost
      * Here I am using a list to store open tiles.  This search can be optimized 
-     * significantly by switching to a binary heap as insertion and deletion would 
-     * would both be O(log n) instead of O(n) here
+     * significantly by switching to a binary heap as the lowest fCost tile 
+     * is stored at the root, and insertion/deletion would only be O(log N)
+     * instead of O(N) as it is now
      */
     var lowIndex = 0;
     for (var i = 0; i < openList.length; i++) {
@@ -292,9 +293,16 @@ AStar.Demo.prototype.onCanvasClick = function(e) {
     var path = AStar.findPath(this.tileMap, this.startTile, tileClicked);
 
     this.renderTileMap();
-    this.renderPath(path);
 
-    this.startTile = tileClicked;
+    if (path.length === 0) {
+      alert("Sorry, can't get there.  Try a different tile.");
+      this.tileMap.reset();
+      this.renderTileMap();
+      this.renderPath([this.startTile]);
+    } else {
+      this.renderPath(path);      
+      this.startTile = tileClicked;
+    }    
   }
 };
 
