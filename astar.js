@@ -12,6 +12,7 @@ var AStar = AStar || {};
 /**
  * Simple tile object
  *
+ * @class AStar.Tile
  * @constructor
  * @param {int} x
  * @param {int} y
@@ -62,6 +63,7 @@ AStar.Tile.prototype.samePositionAs = function(tile) {
 /**
  * Tile map object represented as 2d array of tile objects
  *
+ * @class AStar.TileMap
  * @constructor
  * @param {int} width - # of x tiles in map
  * @param {int} height - # of y tiles in map
@@ -160,7 +162,12 @@ AStar.findPath = function(tileMap, startTile, goalTile) {
 
   while (openList.length > 0) {
 
-    // Find the open node with the lowest fCost
+    /** 
+     * Find the open node with the lowest fCost
+     * Here I am using a list to store open tiles.  This search can be optimized 
+     * significantly by switching to a binary heap as insertion and deletion would 
+     * would both be O(log n) instead of O(n) here
+     */
     var lowIndex = 0;
     for (var i = 0; i < openList.length; i++) {
 
@@ -237,6 +244,7 @@ AStar.heuristic = function(startTile, goalTile) {
 /**
  * Main object for demonstrating A * pathfinding visually
  *
+ * @class AStar.Demo
  * @constructor
  * @param {canvas} canvas - canvas object for rendering the tile map
  * @param {int} mapWidth - # of x tiles in map
@@ -359,7 +367,7 @@ AStar.Demo.prototype.renderTileMap = function() {
 };
 
 /**
- * Render the given array of tiles
+ * Render the given array of tiles as a path
  * 
  * @method AStar.Demo#renderPath
  * @param {AStar.Tile[]} path
